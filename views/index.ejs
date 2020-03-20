@@ -10,21 +10,29 @@
     <form action="/create" method="post">
         <h2>todo入力フォーム</h2>
         <label for="name">やることの名前</label>
-        <input type="text" name="todoContent">
+        <input type="text" id="name" name="name">
+        <label for="text">やることの内容</label>
+        <input type="text" id="text" name="text">
+        <select name="color">
+            <option value="red">赤</option>
+            <option value="white">白</option>
+            <option value="black">黒</option>
+            <option value="green">緑</option>
+        </select>
         <input type="submit" value="作成">
     </form>
 
     <h2>タスク名</h2>
     <ul>
-        <% notDoneTodos.map((todo) => { %>
-             <li><%= todo.id %> <%= todo.content %></li>
+        <% lists.map((list) => { %>
+             <li><%= list.name %> <%= list.text %></li>
             <!-- 編集ボタン -->
-            <form action="/edit/<%= todo.id %>" method="get">
+            <form action="/edit/<%= list.id %>" method="get">
                 <input type="submit" value="編集">
             </form>
 
             <!-- 削除ボタン -->
-            <form action="/complete/<%= todo.id %>" method="post">
+            <form action="/complete/<%= list.id %>" method="post">
                 <input type="hidden" name="_method" value="put"> <!-- 設定だけ -->
                 <input type="submit" value="完了">
             </form>
@@ -32,10 +40,5 @@
     </ul>
 
     <h2>終わったこと</h2>
-    <ul>
-        <% doneTodos.map((todo) => { %>
-            <li><%= todo.id %> <%= todo.content %></li>
-        <% }) %>
-    </ul>
 </body>
 </html>
