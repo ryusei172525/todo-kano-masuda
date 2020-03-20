@@ -4,9 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -19,8 +16,77 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+// ここから書き始める
+var methodOverride = require('method-override');
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    var method = req.body._method
+    delete req.body._method
+    return method
+  }
+}));
+
+
+let todos = []; // 最初は何も入れないため空白
+
+// 一覧表示
+app.get('/', (req, res) => {
+  let notDoneTodos = todos.filter(todo => !todo.done);
+  let doneTodos = todos.filter(todo => todo.done);
+  res.render('index.ejs', { notDoneTodos: notDoneTodos, doneTodos: doneTodos } );
+});
+
+// 新規作成
+app.post('/create', (req, res) => {
+  let newTodo = {
+    id: todos.length + 1,
+    content: req.body.todoContent
+  };
+  todos.push(newTodo);
+  res.redirect('/');
+});
+
+// 編集
+app.get('/edit/:id', (req, res) => {
+  for (let i in todos) {
+    if (todos[i].id == req.params.id) {
+      res.render('edit.ejs', { todo: todos[i] } );
+    }
+  }
+});
+
+// 更新
+app.put('/update/:id', (req, res) => {
+  for (let i in todos) {
+    if (todos[i].id == req.params.id) {
+      todos[i].content = req.body.todoContent;
+    }
+  }
+  res.redirect('/');
+});
+
+// 完了
+app.put('/complete/:id', (req, res) => {
+  for (let i in todos) {
+    if (todos[i].id == req.params.id) {
+      todos[i].done = true;
+    }
+  }
+  res.redirect('/');
+});
+
+// 削除
+app.delete('/delete/:id', (req, res) => {
+  for (let i in todos) {
+    if (todos[i].id == req.params.id) {
+      delete todos[i];
+    }
+  }
+  res.redirect('/');
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
