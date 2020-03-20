@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <title>todo</title>
+</head>
+
+<body>
+    <header>
+        <h1>todo</h1>
+    </header>
+
+    <div id="main">
+        <div id="wrapper">
+            <div id="form">
+                <form action="" method="POST" id="form-area">
+                    <h2>todo入力フォーム</h2>
+                    <label for="name">name</label>
+                    <input type="text" id="name"><br>
+                    <label for="text">text</label>
+                    <input type="text" id="text"><br>
+                    <input type="submit" value="送信">
+                </form>
+            </div>
+            <div id="todo">
+                <h2>todo list</h2>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+
+    </footer>
+</body>
+
 </html>
