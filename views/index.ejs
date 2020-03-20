@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
-    <title>todo</title>
+    <title>Todoリスト</title>
 </head>
-
 <body>
-    <header>
-        <h1>todo</h1>
-    </header>
+    <h1>Todoリスト管理表</h1>
+    <form action="/create" method="post">
+        <h2>todo入力フォーム</h2>
+        <label for="name">やることの名前</label>
+        <input type="text" name="todoContent">
+        <input type="submit" value="作成">
+    </form>
 
-    <div id="main">
-        <div id="wrapper">
-            <div id="form">
-                <form action="" method="POST" id="form-area">
-                    <h2>todo入力フォーム</h2>
-                    <label for="name">name</label>
-                    <input type="text" id="name"><br>
-                    <label for="text">text</label>
-                    <input type="text" id="text"><br>
-                    <input type="submit" value="送信">
-                </form>
-            </div>
-            <div id="todo">
-                <h2>todo list</h2>
-            </div>
-        </div>
-    </div>
+    <h2>タスク名</h2>
+    <ul>
+        <% notDoneTodos.map((todo) => { %>
+             <li><%= todo.id %> <%= todo.content %></li>
+            <!-- 編集ボタン -->
+            <form action="/edit/<%= todo.id %>" method="get">
+                <input type="submit" value="編集">
+            </form>
 
-    <footer>
+            <!-- 削除ボタン -->
+            <form action="/complete/<%= todo.id %>" method="post">
+                <input type="hidden" name="_method" value="put"> <!-- 設定だけ -->
+                <input type="submit" value="完了">
+            </form>
+        <% }) %>
+    </ul>
 
-    </footer>
+    <h2>終わったこと</h2>
+    <ul>
+        <% doneTodos.map((todo) => { %>
+            <li><%= todo.id %> <%= todo.content %></li>
+        <% }) %>
+    </ul>
 </body>
-
 </html>
