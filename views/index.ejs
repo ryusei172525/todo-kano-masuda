@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todoリスト</title>
 </head>
+
 <body>
     <h1>Todoリスト管理表</h1>
     <form action="/create" method="post">
@@ -26,20 +28,34 @@
     <h2>タスク名</h2>
     <ul>
         <% lists.map((list) => { %>
-             <li><%= list.name %> <%= list.text %></li>
-            <!-- 編集ボタン -->
-            <form action="/edit/<%= list.id %>" method="get">
-                <input type="submit" value="編集">
-            </form>
-            <!-- 完了ボタン -->
-            <form action="/complete/<%= list.id %>" method="post">
-                <input type="hidden" name="_method" value="delete"> <!-- 設定だけ -->
-                <input type="submit" value="完了">
-            </form>
+            <% if (list.done === 0){ %>
+                <li><%= list.name %> <%= list.text %></li>
+                <!-- 編集ボタン -->
+                <form action="/edit/<%= list.id %>" method="get">
+                    <input type="submit" value="編集">
+                </form>
+                <!-- 完了ボタン -->
+                <form action="/complete/<%= list.id %>" method="post">
+                    <input type="hidden" name="_method" value="put"> <!-- 設定だけ -->
+                    <input type="submit" value="完了">
+                </form>
+            <% } %>
         <% }) %>
     </ul>
 
     <h2>終わったこと</h2>
-    
+    <ul>
+        <li>
+            <% lists.map((list) => { %>
+            <% if(list.done === 1){ %>
+            <p><%= list.name %> </p>
+            <p><%= list.text %> </p>
+            <%} %>
+            <% }) %>
+
+        </li>
+    </ul>
+
 </body>
+
 </html>

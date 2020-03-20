@@ -90,27 +90,15 @@ app.put('/update/:id', (req, res) => {
 });
 
 // 完了
-app.delete('/complete/:id', (req, res) => {
+app.put('/complete/:id', (req, res) => {
   connection.query(
-    'DELETE FROM list WHERE id = ?',
-    [req.params.id],
+    'UPDATE list SET done = ? WHERE id= ?',
+    [1,req.params.id],
     (error, results) => {
       res.redirect('/');
     }
   );
-  
 });
-
-// 削除
-app.delete('/delete/:id', (req, res) => {
-  for (let i in todos) {
-    if (todos[i].id == req.params.id) {
-      delete todos[i];
-    }
-  }
-  res.redirect('/');
-});
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
