@@ -27,32 +27,49 @@ app.use(methodOverride(function (req, res) {
     return method
   }
 }));
+//mysql 設定
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'todo'
+});
 
 
-let todos = []; // 最初は何も入れないため空白
+
 
 // 一覧表示
 app.get('/', (req, res) => {
-  let notDoneTodos = todos.filter(todo => !todo.done);
-  let doneTodos = todos.filter(todo => todo.done);
-  res.render('index.ejs', { notDoneTodos: notDoneTodos, doneTodos: doneTodos } );
+  connection.query(
+    'SELECT name from list',
+    (error, results) => {
+      console.log(error);
+      res.render('index.ejs', { lists: results });
+    }
+  );
 });
 
 // 新規作成
 app.post('/create', (req, res) => {
-  let newTodo = {
-    id: todos.length + 1,
-    content: req.body.todoContent
-  };
-  todos.push(newTodo);
-  res.redirect('/');
+  console.log(req.body.name);
+  console.log(req.body.text);
+  console.log(req.body.body);
+  connection.query(
+    'INSERT INTO list (name,text,color) VALUES (?,?,?)',
+    [req.body.name, req.body.text, req.body.color],
+    (error, results) => {
+      console.log(error);
+      res.redirect('/');
+    }
+  );
 });
 
 // 編集
 app.get('/edit/:id', (req, res) => {
   for (let i in todos) {
     if (todos[i].id == req.params.id) {
-      res.render('edit.ejs', { todo: todos[i] } );
+      res.render('edit.ejs', { todo: todos[i] });
     }
   }
 });
@@ -89,12 +106,12 @@ app.delete('/delete/:id', (req, res) => {
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
