@@ -42,7 +42,7 @@ const connection = mysql.createConnection({
 // 一覧表示
 app.get('/', (req, res) => {
   connection.query(
-    'SELECT name from list',
+    'SELECT * from list',
     (error, results) => {
       console.log(error);
       res.render('index.ejs', { lists: results });
@@ -67,31 +67,38 @@ app.post('/create', (req, res) => {
 
 // 編集
 app.get('/edit/:id', (req, res) => {
-  for (let i in todos) {
-    if (todos[i].id == req.params.id) {
-      res.render('edit.ejs', { todo: todos[i] });
+  connection.query(
+    'SELECT * FROM list WHERE id=?',
+    [req.params.id],
+    (error, results) => {
+      console.log('出力');
+      console.log(results[0]);
+      res.render('edit.ejs', {list: results[0] });
     }
-  }
+  )
 });
 
 // 更新
 app.put('/update/:id', (req, res) => {
-  for (let i in todos) {
-    if (todos[i].id == req.params.id) {
-      todos[i].content = req.body.todoContent;
+  connection.query(
+    'UPDATE list SET name=?,text = ? WHERE id= ?',
+    [req.body.name, req.body.text,req.params.id],
+    (error, results) => {
+      res.redirect('/');
     }
-  }
-  res.redirect('/');
+  );
 });
 
 // 完了
-app.put('/complete/:id', (req, res) => {
-  for (let i in todos) {
-    if (todos[i].id == req.params.id) {
-      todos[i].done = true;
+app.delete('/complete/:id', (req, res) => {
+  connection.query(
+    'DELETE FROM list WHERE id = ?',
+    [req.params.id],
+    (error, results) => {
+      res.redirect('/');
     }
-  }
-  res.redirect('/');
+  );
+  
 });
 
 // 削除
