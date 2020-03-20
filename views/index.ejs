@@ -13,6 +13,7 @@
         <input type="text" id="name" name="name">
         <label for="text">やることの内容</label>
         <input type="text" id="text" name="text">
+
         <select name="color">
             <option value="red">赤</option>
             <option value="white">白</option>
@@ -30,15 +31,15 @@
             <form action="/edit/<%= list.id %>" method="get">
                 <input type="submit" value="編集">
             </form>
-
-            <!-- 削除ボタン -->
+            <!-- 完了ボタン -->
             <form action="/complete/<%= list.id %>" method="post">
-                <input type="hidden" name="_method" value="put"> <!-- 設定だけ -->
+                <input type="hidden" name="_method" value="delete"> <!-- 設定だけ -->
                 <input type="submit" value="完了">
             </form>
         <% }) %>
     </ul>
 
     <h2>終わったこと</h2>
+    
 </body>
 </html>
